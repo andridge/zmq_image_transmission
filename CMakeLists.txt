@@ -12,11 +12,13 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  cv_bridge
+  image_transport
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
+find_package(OpenCV)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -119,6 +121,8 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${ZeroMQ_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -135,6 +139,9 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/zmq_image_transmission_node.cpp)
+add_executable(image_to_topic src/image_to_topic.cpp)
+add_executable(ros2zmq_translator src/ros2zmq_translator.cpp)
+add_executable(zmq_image_receiver src/zmq_image_receiver.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -151,6 +158,21 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+target_link_libraries(image_to_topic
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+target_link_libraries(ros2zmq_translator
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${ZeroMQ_LIBRARIES}
+)
+
+target_link_libraries(zmq_image_receiver
+    ${OpenCV_LIBRARIES}
+    ${ZeroMQ_LIBRARIES}
+    )
 #############
 ## Install ##
 #############

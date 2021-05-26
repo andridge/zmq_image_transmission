@@ -10,10 +10,11 @@ bool has_img=false;
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg){
 
-	has_img=false;
+//    ROS_INFO("Received image message");
+  has_img=false;
   try{
     img = cv_bridge::toCvShare(msg, "bgr8")->image;
-    cv::Size sz1(640,480);
+    cv::Size sz1(640,480); // TODO only works for 640x480 images ...
     cv::resize( img, imagerec, sz1);
     has_img=true;
 
@@ -33,12 +34,13 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
     ros::Rate loop_rate(10);
     image_transport::ImageTransport it(nh);
-    image_transport::Subscriber sub = it.subscribe("/camera/image_raw", 1, imageCallback);
+    image_transport::Subscriber sub = it.subscribe("/image", 1, imageCallback);
 
     //  Prepare our context and publisher
     zmq::context_t context(1);
     zmq::socket_t publisher(context, ZMQ_REP);
-    publisher.bind("tcp://192.168.30.101:6666");
+//    publisher.bind("tcp://192.168.30.101:6666");
+    publisher.bind("tcp://127.0.0.1:6666");
 
     ROS_INFO("ZMQ _ SERVER LISTNING \n");
 
@@ -52,12 +54,15 @@ int main(int argc, char** argv)
    		zmq::message_t request;
 
 		if (publisher.recv(&request, ZMQ_DONTWAIT)){
+
+            ROS_INFO("Received zmq image request \n");
+
 		        size_t frameSize = imagerec.step[0] * imagerec.rows;
 			publisher.send((void*) imagerec.data, frameSize);
 		}
  		
-		cv::imshow("view", imagerec);
-     		cv::waitKey(30);
+		cv::imshow("ros2zmq_translator", imagerec);
+     	cv::waitKey(30);
         
 }
 		loop_rate.sleep();
