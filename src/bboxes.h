@@ -5,6 +5,11 @@
 #ifndef ZMQ_IMAGE_TRANSMISSION_BBOXES_H
 #define ZMQ_IMAGE_TRANSMISSION_BBOXES_H
 
+#include <iostream>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+
 using namespace std;
 
 vector<string> split(const string& s, char separator)
@@ -42,7 +47,7 @@ public:
         this->w =stoi(strs[4]);
         this->h =stoi(strs[5]);
         this->category = strs[0];
-        this->c = stoi(strs[1]);
+        this->c = stof(strs[1]);
     }
 
     BBox(int x, int y, int h, int w, std::string category, float c)

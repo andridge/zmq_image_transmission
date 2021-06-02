@@ -20,6 +20,9 @@ find_package(catkin REQUIRED COMPONENTS
 # find_package(Boost REQUIRED COMPONENTS system)
 find_package(OpenCV)
 
+set(CMAKE_MODULE_PATH /home/agrob/CMAKE_MODULE_PATH)
+find_package(ZeroMQ REQUIRED)
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -142,6 +145,7 @@ include_directories(
 add_executable(image_to_topic src/image_to_topic.cpp)
 add_executable(ros2zmq_translator src/ros2zmq_translator.cpp)
 add_executable(zmq_image_receiver src/zmq_image_receiver.cpp)
+#add_executable(zmq_img_rcv_evaluator src/zmq_img_rcv_evaluator.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -173,6 +177,7 @@ target_link_libraries(zmq_image_receiver
     ${OpenCV_LIBRARIES}
     ${ZeroMQ_LIBRARIES}
     )
+
 #############
 ## Install ##
 #############

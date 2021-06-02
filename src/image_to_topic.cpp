@@ -7,12 +7,31 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
+#include <boost/filesystem.hpp>
 
 #include <string>
 #include <iostream>
 #include <fstream>
 
 using namespace std;
+using namespace boost::filesystem;
+
+string read_images(string pathfolder) {
+    string image_file;
+    // Read a folder with multiple images
+    path p(pathfolder);
+    for (auto i = directory_iterator(p); i != directory_iterator(); i++)
+    {
+        if (!is_directory(i->path())) //we eliminate directories
+        {
+            cout << i->path().filename().string() << endl;
+            image_file = path().filename().string();
+        }
+        else
+            continue;
+    }
+    return image_file;
+}
 
 int main(int argc, char* argv[])
 {
@@ -28,6 +47,12 @@ int main(int argc, char* argv[])
     }
     exit(0);*/
 
+    // Define the folder images path
+//    string path = "/home/agrob/catkin_ws/src/zmq_image_transmission/images" ;
+//    string image_file = read_images (path);
+
+//    cout << image_file << endl;
+
     cout << argv[1] << endl;
     string image_file = argv[1];
 
@@ -35,7 +60,10 @@ int main(int argc, char* argv[])
     ros::NodeHandle nh;
 
     cv_bridge::CvImage cv_image;
+//    cv_image.image = cv::imread((path + "/" + image_file).c_str(),cv::IMREAD_COLOR);
     cv_image.image = cv::imread(image_file.c_str(),cv::IMREAD_COLOR);
+
+
 
     cv::imshow("image_to_topic", cv_image.image);
     cv::waitKey(20);
@@ -44,8 +72,13 @@ int main(int argc, char* argv[])
     sensor_msgs::Image ros_image;
     cv_image.toImageMsg(ros_image);
 
+
+
+    // Publicar
     ros::Publisher pub = nh.advertise<sensor_msgs::Image>("/image", 1);
     ros::Rate loop_rate(5);
+
+
 
     while (nh.ok())
     {
@@ -53,4 +86,5 @@ int main(int argc, char* argv[])
         loop_rate.sleep();
         cv::waitKey(10);
     }
+
 }
