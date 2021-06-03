@@ -34,8 +34,8 @@ int main(int argc, char** argv)
     zmq::socket_t  zmq_socket(context, ZMQ_REP);
 
     std::printf("Connecting to server a... \n");
-//    zmq_socket.connect ("tcp://127.0.0.1:6666");
-    zmq_socket.bind("tcp://127.0.0.1:6666");
+    zmq_socket.connect ("tcp://192.168.200.132:6666");
+//    zmq_socket.bind("tcp://127.0.0.1:6666");
 
 
     while (1) {
@@ -61,12 +61,34 @@ int main(int argc, char** argv)
             vector<BBox> bboxes;
             // Get values of Bounding Boxes
             for (auto& box : results.bboxes) {
-                bboxes.push_back(BBox(box.x, box.y, box.height, box.width, "Tomato", box.score));
-//                int label = box.label;
-//                float xmin = box.x * ROS_image.cols;
-//                float ymin = box.y * ROS_image.rows;
-//                float xmax = xmin + box.width * ROS_image.cols;
-//                float ymax = ymin + box.height * ROS_image.rows;
+                int x = box.x * ROS_image.cols;
+                int y = box.y * ROS_image.rows;
+                int height = box.height * ROS_image.rows;
+                int width = box.width * ROS_image.cols;
+                float confidence = box.score;
+                int label = box.label;
+                bboxes.push_back(BBox(x, y, height, width, "Tomato", confidence));
+                if (label > -1) {
+                    if (label == 0) {
+                        rectangle(ROS_image, Point(x, y), Point(width, height),
+                                  Scalar(200, 0, 0), 1, 1, 0);
+                        putText(ROS_image, classes[label], Point(x, y - 10),
+                                cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(200, 0, 0), 2);
+                    }
+                    else {
+                        rectangle(ROS_image, Point(x, y), Point(width, height),
+                                  Scalar(0, 200, 0), 1, 1, 0);
+                        putText(ROS_image, classes[label], Point(x, y - 10),
+                                cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 200, 0), 2);
+                    }
+                }
+
+                //bboxes.push_back(BBox(box.x, box.y, box.height, box.width, "Tomato", box.score));
+                //int label = box.label;
+                //float xmin = box.x * ROS_image.cols;
+                //float ymin = box.y * ROS_image.rows;
+                //float xmax = xmin + box.width * ROS_image.cols;
+                //float ymax = ymin + box.height * ROS_image.rows;
             }
             std::string str_bboxes;
 
@@ -125,3 +147,4 @@ int main(int argc, char** argv)
 
     }
 }
+
