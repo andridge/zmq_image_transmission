@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 //            cv::Mat ROS_image(480, 640, CV_8UC3, request.data()); // store the reply data into an image structure
             cv::Mat ROS_image(720, 720, CV_8UC3, request.data()); // store the reply data into an image structure
             // Print the image with label "zmq_image_receiver"
-            cv::imshow("zmq_image_receiver", ROS_image);
+            cv::imshow("zmq_image_inference", ROS_image);
 
             // Detection using YOLOv4
             const string classes[1] = { "Tomato" };
