@@ -1,7 +1,0 @@
-Tomato 209 148 27 30
-Tomato 216 128 30 34
-Tomato 237 115 30 37
-Tomato 599 134 96 116
-Tomato 649 183 59 66
-Tomato 627 277 87 112
-Tomato 650 333 69 93
