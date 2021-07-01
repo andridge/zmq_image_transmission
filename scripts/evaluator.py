@@ -39,7 +39,7 @@ for image_path in image_paths:
     pub.publish(image_msg)
     rospy.sleep(0.5)
 
-    cv2.imshow('image', image)
+    cv2.imshow('evaluator', image)
     cv2.waitKey(50)
 
     print('waiting for detections message ... ')
