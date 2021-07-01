@@ -2,6 +2,7 @@
 
 ## This tutorial explains the process of using the architecture, for send images from ROS to FPGA for inference, using ZMQ comunication protocol.
 
+**This repository was tested on ROS Melodic and Noetic, and was used FPGA Xilinx ZYNQ ZCU104 for image inference.**
 
 ### In the folders provided in this repository, they contain the files for use, namely:
 
